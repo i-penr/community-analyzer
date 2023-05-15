@@ -1,3 +1,4 @@
+import request from 'request';
 import snoo from './startConn';
 
 export async function fetchAllHotPosts(sub: string, before: string) {
@@ -10,4 +11,10 @@ export async function fetchAllHotPosts(sub: string, before: string) {
             throw new Error('403');
         }
     }
+}
+
+export async function fetchSubMetadata(sub: string) {
+    return new Promise((resolve) => {
+        snoo.getSubreddit(sub).fetch().then(resolve);
+    });
 }

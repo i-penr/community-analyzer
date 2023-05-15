@@ -1,10 +1,12 @@
-import conn from '../db';
 import { Request, Response } from 'express';
 import { addJobToQueue } from '../bullmq/queue';
 import { QueueEvents } from 'bullmq';
-import { MongoError } from 'mongodb';
-import { fetchAllHotPosts } from '../snoowrap/getData';
+import { fetchAllHotPosts, fetchSubMetadata } from '../snoowrap/getData';
+import { upsertJob, getJob } from '../db/jobQueries';
+import { insertPosts, getLatestPostName, getPosts } from '../db/postQueries';
 import * as dotenv from 'dotenv';
+import { upsertSub } from '../db/subQueries';
+import Snoowrap from 'snoowrap';
 dotenv.config();
 
 
@@ -34,60 +36,51 @@ export async function requestJob(req: Request, res: Response) {
 }
 
 export async function startJob(sub: string) {
-    const job = await findJob(sub);
+    const job = await getJob(sub);
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
         const latestPostName = await getLatestPostName(sub);
-        let data = await fetchAllHotPosts(sub, latestPostName);
+        let postData = await fetchAllHotPosts(sub, latestPostName);
+        let subData: any = await fetchSubMetadata(sub);
+        subData = removeUserRelatedData(subData.toJSON());
 
-        if (data && data.length > 0) {
-            data = JSON.parse(JSON.stringify(data));
-            await insertPosts(data);
+        if (postData && postData.length > 0) {
+            await insertPosts(JSON.parse(JSON.stringify(postData)));
         } else if (!latestPostName) {
             return 404;
         }
 
+        await upsertSub(sub, subData);
         await upsertJob(sub);
     }
 
-    return getDataFromDb(sub);
+    return getPosts(sub);
 }
 
-async function getLatestPostName(sub: string) {
-    const latestPost = await conn.getDb().collection('posts').findOne(
-        { subreddit: sub },
-        { collation: { locale: 'en', strength: 2 }, sort: { created: -1 }}
-    );
+function removeUserRelatedData(sub: Snoowrap.Subreddit) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const json: any = sub;
 
-    return latestPost ? latestPost.name : '';
+    delete json.user_is_banned;
+    delete json.user_can_flair_in_sr;
+    delete json.user_is_muted;
+    delete json.user_can_flair_in_sr;
+    delete json.user_flair_richtext;
+    delete json.user_has_favorited;
+    delete json.user_flair_template_id;
+    delete json.user_is_subscriber;
+    delete json.user_is_moderator;
+    delete json.user_is_contributor;
+    delete json.user_flair_background_color;
+    delete json.user_sr_theme_enabled;
+    delete json.user_sr_flair_enabled;
+    delete json.user_flair_enabled_in_sr;
+    delete json.submit_text;
+    delete json.user_flair_css_class;
+    delete json.user_flair_position;
+    delete json.user_flair_text;
+    delete json.user_flair_text_color;
+    delete json.user_flair_type;
+
+    return json;
 }
-
-async function insertPosts(data: any) {
-    await conn.getDb().collection('posts').insertMany(data, { ordered: false })
-        .then((result) => {
-            console.log(`${result.insertedCount} items inserted.`);
-        }).catch((err: MongoError) => { 
-            console.error(`ERROR in post insert: ${err.errmsg}`); 
-        });
-}
-
-async function upsertJob(sub: string) {
-    await conn.getDb().collection('jobs').updateOne(
-        { sub: sub },
-        { $set: { status: 'available', sub: sub }, $currentDate: { lastUpdated: true } },
-        { upsert: true })
-        .then(() => {
-            console.log(`Job updated for subreddit ${sub}`);
-        }).catch((err: MongoError) => { 
-            console.error(`ERROR in job upsert: ${err.errmsg}`); 
-        });
-}
-
-async function getDataFromDb(sub: string) {
-    return await conn.getDb().collection('posts').find({ subreddit: sub }).collation({ locale: 'en', strength: 2 }).toArray();
-}
-
-async function findJob(sub: string) {
-    return await conn.getDb().collection('jobs').findOne({ sub: sub });
-}
-

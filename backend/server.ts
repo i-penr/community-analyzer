@@ -1,5 +1,5 @@
 import { app } from './app';
-import conn from './db';
+import conn from './db/db';
 
 conn.connectToDb((err) => {
     if (!err) {

@@ -14,7 +14,7 @@ const workerHandler = async (job: Job<WorkerJob>) => {
             } catch (err: any) {
                 if (err.message === '403') {
                     return 403;
-                } else return 500;
+                } else { console.log(err); return 500; }
             }
         }
     }

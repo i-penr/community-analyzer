@@ -1,4 +1,4 @@
-import conn from '../db';
+import conn from '../db/db';
 import snoo from '../snoowrap/startConn';
 import { Db, ObjectId } from 'mongodb';
 import { Request, Response } from 'express';

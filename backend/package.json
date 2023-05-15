@@ -21,6 +21,7 @@
     "@types/bull-arena": "^3.0.7",
     "@types/express": "^4.17.17",
     "@types/node": "^18.16.3",
+    "@types/request": "^2.48.8",
     "bull-arena": "^3.30.4",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",

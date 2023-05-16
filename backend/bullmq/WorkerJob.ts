@@ -1,12 +1,12 @@
 export interface StartJob {
     type: 'StartJob',
     sub: string
-};
+}
 
 export interface GetJob {
     type: 'Get',
-    data: { }
-};
+    data: object
+}
 
 export type WorkerJob =
     | StartJob

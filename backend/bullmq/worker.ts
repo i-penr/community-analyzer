@@ -11,8 +11,8 @@ const workerHandler = async (job: Job<WorkerJob>) => {
         case 'StartJob': {
             try {
                 return await startJob(job.data.sub);
-            } catch (err: any) {
-                if (err.message === '403') {
+            } catch (err: unknown) {
+                if ((err as Error).message === '403') {
                     return 403;
                 } else { console.log(err); return 500; }
             }
@@ -36,9 +36,10 @@ const eventsFiles: Array<string> = fs.readdirSync(eventsPath).filter(file => fil
 
 for (const file of eventsFiles) {
     const filePath: string = path.join(eventsPath, file);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const event = require(filePath);
 
-    worker.on(event.name, (...args: any) => { event.execute(...args); });
+    worker.on(event.name, (...args: unknown[]) => { event.execute(...args); });
 }
 
 

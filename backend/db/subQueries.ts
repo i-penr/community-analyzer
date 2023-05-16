@@ -1,7 +1,7 @@
 import { MongoError } from 'mongodb';
 import conn from './db';
 
-export async function upsertSub(sub: string, data: any) {
+export async function upsertSub(sub: string, data: Document[]) {
     await conn.getDb().collection('subs').updateOne(
         { subreddit: sub }, 
         { $set: data },

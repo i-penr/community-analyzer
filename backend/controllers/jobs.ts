@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { addJobToQueue } from '../bullmq/queue';
 import { QueueEvents } from 'bullmq';
-import { fetchAllHotPosts, fetchSubMetadata } from '../snoowrap/getData';
+import { fetchAllNewPosts, fetchSubMetadata } from '../snoowrap/getData';
 import { upsertJob, getJob } from '../db/jobQueries';
 import { insertPosts, getLatestPostName, getPosts } from '../db/postQueries';
 import * as dotenv from 'dotenv';
@@ -11,6 +12,9 @@ dotenv.config();
 
 
 export async function requestJob(req: Request, res: Response) {
+    if (req.params.sub.length > 22 || req.params.sub.length === 0) 
+        return res.status(400).send({ msg: 'ERROR: Bad request (400)', statusCode: 400 });
+
     const job = await addJobToQueue({ type: 'StartJob', sub: String(req.params.sub) });
 
     const queueEvents = new QueueEvents('mainQueue', {
@@ -40,25 +44,29 @@ export async function startJob(sub: string) {
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
         const latestPostName = await getLatestPostName(sub);
-        let postData = await fetchAllHotPosts(sub, latestPostName);
-        let subData: any = await fetchSubMetadata(sub);
-        subData = removeUserRelatedData(subData.toJSON());
+        const postData = await fetchAllNewPosts(sub, latestPostName);
+        let subData: any;
+
+        console.log(postData)
 
         if (postData && postData.length > 0) {
+            console.log('inserting...')
             await insertPosts(JSON.parse(JSON.stringify(postData)));
         } else if (!latestPostName) {
             return 404;
         }
 
+
+        subData = await fetchSubMetadata(sub);
+        subData = removeUserRelatedData(subData.toJSON());
         await upsertSub(sub, subData);
-        await upsertJob(sub);
+        await upsertJob(sub.toLowerCase());
     }
 
     return getPosts(sub);
 }
 
 function removeUserRelatedData(sub: Snoowrap.Subreddit) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json: any = sub;
 
     delete json.user_is_banned;

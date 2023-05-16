@@ -70,7 +70,7 @@ export async function deleteSubById(req: Request, res: Response) {
 export async function deleteSubByName(req: Request, res: Response) {
     const name = req.params.name;
 
-    db.collection('subs').deleteOne({ display_name: name }).then((result) => {
+    conn.getDb().collection('subs').deleteOne({ display_name: name }).then((result) => {
         res.status(200).send(result);
     }).catch((err) => {
         console.log(err);

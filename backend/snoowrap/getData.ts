@@ -1,7 +1,7 @@
-import request from 'request';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import snoo from './startConn';
 
-export async function fetchAllHotPosts(sub: string, before: string) {
+export async function fetchAllNewPosts(sub: string, before: string) {
     try {
         return (await snoo.getSubreddit(sub).getNew({ before: before })).fetchAll({ amount: 0, append: true });
     } catch (err: any) {
@@ -15,6 +15,6 @@ export async function fetchAllHotPosts(sub: string, before: string) {
 
 export async function fetchSubMetadata(sub: string) {
     return new Promise((resolve) => {
-        snoo.getSubreddit(sub).fetch().then(resolve);
+        snoo.getSubreddit(sub).fetch().then(resolve);  
     });
 }

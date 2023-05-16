@@ -1,7 +1,7 @@
 import conn from './db';
 import { MongoError } from 'mongodb';
 
-export async function insertPosts(data: any) {
+export async function insertPosts(data: Document[]) {
     await conn.getDb().collection('posts').insertMany(data, { ordered: false })
         .then((result) => {
             console.log(`${result.insertedCount} items inserted.`);

@@ -47,10 +47,7 @@ export async function startJob(sub: string) {
         const postData = await fetchAllNewPosts(sub, latestPostName);
         let subData: any;
 
-        console.log(postData)
-
         if (postData && postData.length > 0) {
-            console.log('inserting...')
             await insertPosts(JSON.parse(JSON.stringify(postData)));
         } else if (!latestPostName) {
             return 404;

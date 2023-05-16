@@ -4,7 +4,7 @@ import { addJobToQueue } from '../bullmq/queue';
 import { QueueEvents } from 'bullmq';
 import { fetchAllNewPosts, fetchSubMetadata } from '../snoowrap/getData';
 import { upsertJob, getJob } from '../db/jobQueries';
-import { insertPosts, getLatestPostName, getPosts } from '../db/postQueries';
+import { insertPosts, getLatestPostName } from '../db/postQueries';
 import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
 import Snoowrap from 'snoowrap';
@@ -53,14 +53,13 @@ export async function startJob(sub: string) {
             return 404;
         }
 
-
         subData = await fetchSubMetadata(sub);
         subData = removeUserRelatedData(subData.toJSON());
         await upsertSub(sub, subData);
         await upsertJob(sub.toLowerCase());
     }
 
-    return getPosts(sub);
+    return { msg: 'Job completed successfully (200)', statusCode: 200, subreddit: sub };
 }
 
 function removeUserRelatedData(sub: Snoowrap.Subreddit) {

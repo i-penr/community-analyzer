@@ -7,7 +7,7 @@ import { upsertJob, getJob } from '../db/jobQueries';
 import { insertPosts, getLatestPostName } from '../db/postQueries';
 import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
-import Snoowrap from 'snoowrap';
+import { removeUserRelatedData } from './subreddits';
 dotenv.config();
 
 
@@ -60,31 +60,4 @@ export async function startJob(sub: string) {
     }
 
     return { msg: 'Job completed successfully (200)', statusCode: 200, subreddit: sub };
-}
-
-function removeUserRelatedData(sub: Snoowrap.Subreddit) {
-    const json: any = sub;
-
-    delete json.user_is_banned;
-    delete json.user_can_flair_in_sr;
-    delete json.user_is_muted;
-    delete json.user_can_flair_in_sr;
-    delete json.user_flair_richtext;
-    delete json.user_has_favorited;
-    delete json.user_flair_template_id;
-    delete json.user_is_subscriber;
-    delete json.user_is_moderator;
-    delete json.user_is_contributor;
-    delete json.user_flair_background_color;
-    delete json.user_sr_theme_enabled;
-    delete json.user_sr_flair_enabled;
-    delete json.user_flair_enabled_in_sr;
-    delete json.submit_text;
-    delete json.user_flair_css_class;
-    delete json.user_flair_position;
-    delete json.user_flair_text;
-    delete json.user_flair_text_color;
-    delete json.user_flair_type;
-
-    return json;
 }

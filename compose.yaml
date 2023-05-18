@@ -21,7 +21,7 @@ services:
     container_name: comm-backend
     build: ./backend
     volumes:
-      - ./backend:/backend
+      - ./backend:/app
     #  - /node_modules:/backend/node_modules
     ports:
       - 8080:8080
@@ -32,12 +32,13 @@ services:
     container_name: comm-frontend
     build: ./frontend
     volumes:
-      - ./frontend:/frontend
+      - ./frontend:/app
      # - /node_modules:/frontend/node_modules
     ports:
       - 3000:3000
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
 
 volumes:
   mongodata:

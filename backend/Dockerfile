@@ -2,7 +2,7 @@
 FROM node:16
 
 # Working directory
-WORKDIR /usr/src/backend
+WORKDIR /app
 
 # Copy app dependencies to container
 COPY package*.json ./

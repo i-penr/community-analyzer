@@ -1,8 +1,8 @@
 # Base image
-FROM node:16
+FROM node:16-alpine
 
 # Working directory
-WORKDIR /usr/src/frontend
+WORKDIR /app
 
 # Copy app dependencies to container
 COPY package*.json ./
@@ -15,9 +15,6 @@ COPY . ./
 
 # Expose port
 EXPOSE 3000
-
-# Create cache folder
-RUN mkdir ./node_modules/.cache && chmod -R 777 ./node_modules/.cache
 
 # Deploy app for local development
 CMD ["npm", "start"]

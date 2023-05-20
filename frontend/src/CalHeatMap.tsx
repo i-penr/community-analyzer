@@ -1,7 +1,7 @@
 import CalHeatmap from "cal-heatmap";
 import { FC, useEffect } from "react";
 import 'cal-heatmap/cal-heatmap.css';
-import { useFetch } from "./useFetch";
+import { useFetch } from "./customHooks/useFetch";
 interface ICalHeatMapProps {};
 
 export const CalHeatMap: FC<ICalHeatMapProps> = () => {

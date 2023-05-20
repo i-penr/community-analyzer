@@ -1,11 +1,13 @@
-import './App.css';
+import { CalHeatMap } from "./CalHeatMap";
+import { Input } from "./Input";
 
 function App() {
+  
 
   return (
     <div className="App">
-      <div className="PostList">
-      </div>
+      <Input />
+      <CalHeatMap />
     </div>
   );
 }

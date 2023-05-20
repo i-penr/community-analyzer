@@ -5,9 +5,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.CalHeatMap {
+  margin: auto;
+  width: 50%;
+  padding: auto;
+  outline: solid 1px rgb(13, 17, 31);
+  align-items: center;
+}
+
+.ch-container {
+  margin: auto;
 }

@@ -3,7 +3,7 @@ import { WorkerJob } from "./WorkerJob";
 import path from 'path';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
-import { startJob } from '../controllers/jobs';
+import { startJob } from '../controllers/mainJob';
 dotenv.config();
 
 const workerHandler = async (job: Job<WorkerJob>) => {

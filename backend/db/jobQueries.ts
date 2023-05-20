@@ -16,3 +16,14 @@ export async function upsertJob(sub: string) {
 export async function getJob(sub: string) {
     return await conn.getDb().collection('jobs').findOne({ sub: sub });
 }
+
+export async function updateJobStatus(status: string, sub: string) {
+    await conn.getDb().collection('jobs').updateOne(
+        { sub: sub },
+        { $set: { status: '' }}
+    )
+}
+
+export async function getAllJobs(sub: string) {
+    return await conn.getDb().collection('jobs').find({ sub: sub }).toArray();
+}

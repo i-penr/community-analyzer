@@ -3,6 +3,8 @@ import { postRouter } from './routes/posts';
 import { subredditRouter } from './routes/subreddits';
 import Arena from 'bull-arena';
 import { Queue } from 'bullmq';
+import { widgetRouter } from './routes/widgets';
+import { mainJobRouter } from './routes/mainJob';
 import { jobRouter } from './routes/jobs';
 
 export const app = express();
@@ -34,8 +36,10 @@ const arena = Arena({
 app.use('/arena', arena);
 
 app.use(express.json());
-app.use('/jobs', jobRouter);
+app.use('/widget', widgetRouter);
 app.use('/posts', postRouter);
 app.use('/subs', subredditRouter);
+app.use('/fetch', mainJobRouter);
+app.use('/jobs', jobRouter);
 
 export default app;

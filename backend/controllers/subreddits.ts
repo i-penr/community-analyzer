@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import conn from '../db/db';
 import snoo from '../snoowrap/startConn';
 import { Db, ObjectId } from 'mongodb';

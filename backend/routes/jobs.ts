@@ -1,8 +1,8 @@
 import express from 'express';
-import { requestJob } from '../controllers/jobs';
+import { getJobs } from '../controllers/jobs';
 
 const router = express.Router();
 
-router.post('/start/:sub', requestJob);
+router.get('/fetch/:sub', getJobs);
 
 export { router as jobRouter }

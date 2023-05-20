@@ -1,5 +1,5 @@
 # Base image
-FROM node:16
+FROM node:16-alpine
 
 # Working directory
 WORKDIR /app
@@ -13,10 +13,10 @@ RUN npm ci
 # Get code
 COPY . ./
 
+RUN npx tsc -p .
+
 # Expose port
 EXPOSE 8080
 
-RUN npx tsc -p .
-
 # Deploy app for local development
-CMD ["npx", "nodemon", "-L", "--watch", ".", "dist/server.js"]
+CMD ["npm", "start"]

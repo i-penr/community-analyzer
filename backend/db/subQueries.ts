@@ -16,7 +16,7 @@ export async function upsertSub(sub: string, data: Document[]) {
 export async function getSubLang(sub: string) {
     const subreddit = await conn.getDb().collection('subs').findOne(
                                 { subreddit: sub },
-                                { projection: { _id: 0, lang: 1 } }
+                                { projection: { _id: 0, lang: 1 }, collation: { locale: 'en', strength: 2 } }
     );
 
     return subreddit?.lang;

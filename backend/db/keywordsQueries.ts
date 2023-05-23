@@ -12,3 +12,9 @@ export async function upsertKeywords(sub: string, data: { term: string, score: n
         console.error(`ERROR in keyword upsert: ${err.errmsg}`);
     });
 }
+
+export async function getKeywordsFromDb(sub: string) {
+    return await conn.getDb().collection('keywords').find(
+        { sub: sub }
+    ).collation({ locale: 'en', strength: 2 }).toArray();
+}

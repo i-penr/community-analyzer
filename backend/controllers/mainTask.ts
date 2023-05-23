@@ -8,8 +8,10 @@ import { insertPosts, getLatestPostName } from '../db/postQueries';
 import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
 import { removeUserRelatedData } from './subreddits';
-import { generateKeywords } from '../processors/keywordGenerator';
+import { generateKeywords } from '../services/keywordGenerator';
 import { upsertKeywords } from '../db/keywordsQueries';
+import { generateHeatmapData } from '../services/heatmapDataGenerator';
+import { upsertHeatmap } from '../db/heatmapsQueries';
 dotenv.config();
 
 
@@ -55,13 +57,17 @@ export async function startTask(sub: string) {
         }
 
         await fetchAndInsertSub(sub);
-
         await generateAndInsertKeywords(sub);
-
+        await generateAndInsertHeatmapData(sub);
         await upsertJob(sub.toLowerCase());
     }
 
     return { msg: 'Job completed successfully (200)', statusCode: 200, subreddit: sub };
+}
+
+async function generateAndInsertHeatmapData(sub: string) {
+    const heatmapData: { date: string; value: number; }[] = await generateHeatmapData(sub);
+    await upsertHeatmap(sub, heatmapData);
 }
 
 async function generateAndInsertKeywords(sub: string) {

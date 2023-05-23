@@ -20,6 +20,8 @@ const connObj = {
             conn.collection('posts').createIndex({ subreddit: 1 }, { collation: { locale: 'en', strength: 2 } });
             conn.collection('subs').createIndex({ id: 1 }, { unique: true });
             conn.collection('subs').createIndex({ subreddit: 1 }, { collation: { locale: 'en', strength: 2 } });
+            conn.collection('keywords').createIndex({ subreddit: 1}, { collation: { locale: 'en', strength: 2 }});
+            conn.collection('heatmaps').createIndex({ subreddit: 1}, { collation: { locale: 'en', strength: 2 }});
         }
     },
     getDb() { return conn; }

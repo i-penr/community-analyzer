@@ -9,11 +9,11 @@ import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
 import { removeUserRelatedData } from './subreddits';
 import { generateKeywords } from './keywords';
-import { upsertKeywords } from '../db/keywords';
+import { upsertKeywords } from '../db/keywordsQueries';
 dotenv.config();
 
 
-export async function requestJob(req: Request, res: Response) {
+export async function requestTask(req: Request, res: Response) {
     if (req.params.sub.length > 22 || req.params.sub.length === 0) 
         return res.status(400).send({ msg: 'ERROR: Bad request (400)', statusCode: 400 });
 
@@ -41,7 +41,7 @@ export async function requestJob(req: Request, res: Response) {
     
 }
 
-export async function startJob(sub: string) {
+export async function startTask(sub: string) {
     const job = await getJob(sub);
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
@@ -66,7 +66,7 @@ export async function startJob(sub: string) {
 
 async function generateAndInsertKeywords(sub: string) {
     const keywords: { term: string; score: number; numDocuments: number; }[] = await generateKeywords(sub);
-    
+
     await upsertKeywords(sub, keywords);
 }
 

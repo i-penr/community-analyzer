@@ -3,14 +3,14 @@ import { WorkerJob } from "./WorkerJob";
 import path from 'path';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
-import { startJob } from '../controllers/mainJob';
+import { startTask } from '../controllers/mainTask';
 dotenv.config();
 
 const workerHandler = async (job: Job<WorkerJob>) => {
     switch (job.data.type) {
         case 'StartJob': {
             try {
-                return await startJob(job.data.sub);
+                return await startTask(job.data.sub);
             } catch (err: unknown) {
                 if ((err as Error).message === '403') {
                     return 403;

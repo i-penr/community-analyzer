@@ -1,8 +1,8 @@
 import express from "express";
-import { requestJob } from "../controllers/mainTask";
+import { requestTask } from "../controllers/mainTask";
 
 const router = express.Router();
 
-router.post('/:sub', requestJob);
+router.post('/:sub', requestTask);
 
 export { router as mainTaskRouter }

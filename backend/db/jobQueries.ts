@@ -13,7 +13,7 @@ export async function upsertJob(sub: string) {
     });
 }
 
-export async function getJob(sub: string) {
+export async function getJobFromDb(sub: string) {
     return await conn.getDb().collection('jobs').findOne({ sub: sub });
 }
 

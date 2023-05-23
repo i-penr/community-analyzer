@@ -3,12 +3,12 @@ import { Request, Response } from 'express';
 import { addJobToQueue } from '../bullmq/queue';
 import { QueueEvents } from 'bullmq';
 import { fetchAllNewPosts, fetchSubMetadata } from '../snoowrap/getData';
-import { upsertJob, getJob } from '../db/jobQueries';
+import { upsertJob, getJobFromDb } from '../db/jobQueries';
 import { insertPosts, getLatestPostName } from '../db/postQueries';
 import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
 import { removeUserRelatedData } from './subreddits';
-import { generateKeywords } from './keywords';
+import { generateKeywords } from '../processors/keywordGenerator';
 import { upsertKeywords } from '../db/keywordsQueries';
 dotenv.config();
 
@@ -42,7 +42,7 @@ export async function requestTask(req: Request, res: Response) {
 }
 
 export async function startTask(sub: string) {
-    const job = await getJob(sub);
+    const job = await getJobFromDb(sub);
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
         const latestPostName = await getLatestPostName(sub);

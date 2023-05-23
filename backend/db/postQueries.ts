@@ -24,7 +24,7 @@ export async function getLatestPostName(sub: string) {
     } else return '';
 }
 
-export async function getPosts(sub: string) {
+export async function getPostsFromDb(sub: string) {
     return await conn.getDb().collection('posts').find(
         { subreddit: sub },
         { sort: { created: -1 }}

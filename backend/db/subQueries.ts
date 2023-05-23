@@ -12,3 +12,12 @@ export async function upsertSub(sub: string, data: Document[]) {
         console.error(`ERROR in sub upsert: ${err.errmsg}`);
     });
 }
+
+export async function getSubLang(sub: string) {
+    const subreddit = await conn.getDb().collection('subs').findOne(
+                                { subreddit: sub },
+                                { projection: { _id: 0, lang: 1 } }
+    );
+
+    return subreddit?.lang;
+}

@@ -3,7 +3,7 @@ import { MongoError } from 'mongodb';
 
 export async function upsertJob(sub: string) {
     await conn.getDb().collection('jobs').updateOne(
-        { sub: sub },
+        { sub: sub.toLowerCase() },
         { $set: { status: 'available', sub: sub }, $currentDate: { lastUpdated: true } },
         { upsert: true }
     ).then(() => {
@@ -14,7 +14,7 @@ export async function upsertJob(sub: string) {
 }
 
 export async function getJobFromDb(sub: string) {
-    return await conn.getDb().collection('jobs').findOne({ sub: sub });
+    return await conn.getDb().collection('jobs').findOne({ sub: sub.toLowerCase() });
 }
 
 export async function updateJobStatus(status: string, sub: string) {

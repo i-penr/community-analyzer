@@ -3,7 +3,7 @@ import conn from './db';
 
 export async function upsertKeywords(sub: string, data: { term: string, score: number, numDocuments: number }[]) {
     await conn.getDb().collection('keywords').updateOne(
-        { sub: sub },
+        { sub: sub.toLowerCase() },
         { $set: { data } },
         { upsert: true }
     ).then(() => {
@@ -14,7 +14,7 @@ export async function upsertKeywords(sub: string, data: { term: string, score: n
 }
 
 export async function getKeywordsFromDb(sub: string) {
-    return await conn.getDb().collection('keywords').find(
-        { sub: sub }
-    ).collation({ locale: 'en', strength: 2 }).toArray();
+    return await conn.getDb().collection('keywords').findOne(
+        { sub: sub.toLowerCase() }
+    );
 }

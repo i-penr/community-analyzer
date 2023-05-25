@@ -3,7 +3,7 @@ import conn from './db';
 
 export async function upsertHeatmap(sub: string, data: { date: string, value: number }[]) {
     await conn.getDb().collection('heatmaps').updateOne(
-        { sub: sub },
+        { sub: sub.toLowerCase() },
         { $set: { data } },
         { upsert: true }
     ).then(() => {
@@ -14,7 +14,7 @@ export async function upsertHeatmap(sub: string, data: { date: string, value: nu
 }
 
 export async function getHeatmapData(sub: string) {
-    return await conn.getDb().collection('heatmaps').find(
-        { sub: sub }
-    ).collation({ locale: 'en', strength: 2 }).toArray();
+    return await conn.getDb().collection('heatmaps').findOne(
+        { sub: sub.toLowerCase() }
+    );
 }

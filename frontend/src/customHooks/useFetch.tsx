@@ -6,7 +6,7 @@ export const useFetch = (url: string) => {
 
     useEffect(() => {
         let isCancelled = false;
-        fetch(url, { method: 'POST' })
+        fetch(url)
             .then((res) => {
                 if (!res.ok) {
                     throw Error('There was an error in the request');

@@ -1,0 +1,23 @@
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    height: 3px;
+    width: 90%;
+    position: absolute;
+    background-color: #007bff;
+    bottom: 0;
+    left: 5%;
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.nav-link:hover::after {
+    opacity: 1;
+}
+
+.active { 
+    background-color: #2b3137 !important;
+}

@@ -2,28 +2,28 @@ import { useEffect, useState } from "react";
 
 export const useFetch = (url: string) => {
     const [data, setData] = useState([]);
-    const [error, setError] = useState(null);
+    const [error, setError]: any = useState(null);
 
     useEffect(() => {
-        let isCancelled = false;
-        fetch(url)
+        const abortController = new AbortController();
+        fetch(url, { signal: abortController.signal })
             .then((res) => {
                 if (!res.ok) {
-                    throw Error('There was an error in the request');
+                    throw Error('There was an error in the request', { cause: res });
                 }
+
                 return res.json();
             })
             .then((data) => {
-                if (!isCancelled) {
-                    console.log(data);
-                    setData(data);
-                }
+                setData(data);
+                setError(null);
             }).catch((err) => {
-                setError(err);
+                if (err.name !== 'AbortError')
+                    setError(err);
             });
         
         return () => {
-            isCancelled = true;
+            abortController.abort();
         }
     }, [url]);
 

@@ -44,6 +44,7 @@ export async function requestTask(req: Request, res: Response) {
 }
 
 export async function startTask(sub: string) {
+    sub = sub.toLowerCase();
     const job = await getJobFromDb(sub);
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
@@ -59,7 +60,7 @@ export async function startTask(sub: string) {
         await fetchAndInsertSub(sub);
         await generateAndInsertKeywords(sub);
         await generateAndInsertHeatmapData(sub);
-        await upsertJob(sub.toLowerCase());
+        await upsertJob(sub);
     }
 
     return { msg: 'Job completed successfully (200)', statusCode: 200, subreddit: sub };
@@ -72,7 +73,6 @@ async function generateAndInsertHeatmapData(sub: string) {
 
 async function generateAndInsertKeywords(sub: string) {
     const keywords: { term: string; score: number; numDocuments: number; }[] = await generateKeywords(sub);
-
     await upsertKeywords(sub, keywords);
 }
 

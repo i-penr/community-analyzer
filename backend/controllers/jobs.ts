@@ -8,6 +8,6 @@ export async function getJobs(req: Request, res: Response) {
     if (jobs.length > 0) {
         return res.status(200).send(jobs);
     } else {
-        return res.status(204).send({ msg: "There are no jobs stored" });
+        return res.status(404).send({ msg: "No jobs found" });
     }
 }

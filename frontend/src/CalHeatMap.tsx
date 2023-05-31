@@ -2,6 +2,8 @@ import CalHeatmap from "cal-heatmap";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useFetch } from "./customHooks/useFetch";
 import { IWidgets } from "./interfaces/IWidgets";
+// @ts-ignore
+import Tooltip from 'cal-heatmap/plugins/Tooltip';
 import './css/calendar.css';
 import 'cal-heatmap/cal-heatmap.css';
 
@@ -18,36 +20,31 @@ export const CalHeatMap: FC<IWidgets> = ({ sub }) => {
     const years = useMemo(() => {
       let y = [];
 
-      for (let i = new Date().getFullYear(); i > 2005; i--) {
+      for (let i = new Date().getFullYear(); i >= 2005; i--) {
         y.push(i);
       }
       return y;
     }, []);
-  
-    function handleYearSelectorChange(e: any) {
-      e.preventDefault();
-      setYear(e.target.value);
-      cal.current.jumpTo(new Date().setFullYear(e.target.value), true);
-    }
-
-    function handleMonthSelectorChange(e: any) {
-      e.preventDefault();
-      setMonth(e.target.value);
-      cal.current.jumpTo(new Date().setMonth(e.target.value), true);
-    }
 
     function decrementMonth(e: any) {
       e.preventDefault();
-      if (month === 0) 
+      if (month === 0 && year === 2005) return; 
+      
+      if (month === 0)
         setYear(year-1);
+
       setMonth((month-1+12) % 12); 
       cal.current.previous(); 
     }
 
     function incrementMonth(e: any) {
-      e.preventDefault(); 
+      e.preventDefault();
+
+      if (year === currentDate.getFullYear() && month === 8) return;
+
       if (month === 11)
         setYear(year+1);
+
       setMonth((month+1+12) % 12); 
       cal.current.next();
     }
@@ -80,14 +77,36 @@ export const CalHeatMap: FC<IWidgets> = ({ sub }) => {
               scheme: 'Blues',
             },
           },
-          date: { start: currentDate, locale: { weekStart: 1 } },
+          date: { start: currentDate, locale: { weekStart: 1 }, min: new Date('2005-01-01'), max: new Date(`${currentDate.getFullYear()}-12-31`)  },
           itemSelector: '.calendar',
-        });
+        },
+        [
+          [
+            Tooltip,
+            {
+              text: function (date: any, value: any, dayjsDate: { format: (arg0: string) => string; }) {
+                return (
+                  (value ? value : 0) + ' post(s) on ' + dayjsDate.format('LL')
+                );
+              },
+            },
+          ],
+        ]);
 
+        
         return () => {
           currentCal.destroy();
+          setMonth(new Date().getMonth());
+          setYear(new Date().getFullYear());
         }
       }, [cal, currentDate, data]);
+
+      useEffect(() => {
+        requestAnimationFrame(() => {
+          cal.current.jumpTo(new Date(`${year}-${month+1}-01`), true)
+        })
+        
+      }, [year, month])
 
     return (
         <div className="CalHeatMap">
@@ -96,14 +115,28 @@ export const CalHeatMap: FC<IWidgets> = ({ sub }) => {
             { !error && data.data &&
             (
             <>
-            <span className="px-2 my-2">month:</span>
-            <select className="month form-select w-auto d-inline" value={month} name="month" onChange={(e) => handleMonthSelectorChange(e)} required>
+            <label htmlFor="month" className="px-2 my-2">month:</label>
+            <select 
+              className="month form-select w-auto d-inline" 
+              value={month} 
+              id="month" 
+              name="month" 
+              onChange={(e) => setMonth(Number(e.target.value)) } 
+              required
+            >
               {months.map((m, index) => (
-                <option key={m} value={index}>{m}</option>
+                <option key={index} value={index}>{m}</option>
               ))}
             </select>
-            <span className="px-2 my-2">year:</span>
-            <select className="year form-select w-auto d-inline" value={year} name="year" onChange={(e) => handleYearSelectorChange(e)} required>
+            <label htmlFor="year" className="px-2 my-2">year:</label>
+            <select 
+              className="year form-select w-auto d-inline" 
+              value={year} 
+              id="month" 
+              name="year"
+              onChange={(e) => setYear(Number(e.target.value)) } 
+              required
+            >
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
               ))}
@@ -122,7 +155,6 @@ export const CalHeatMap: FC<IWidgets> = ({ sub }) => {
                 className="next btn my-1" 
                 onClick={ (e) => { 
                   incrementMonth(e);
-                     
                 } }>
                 Next →
               </button>

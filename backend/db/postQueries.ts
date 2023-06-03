@@ -11,6 +11,15 @@ export async function insertPosts(data: Document[]) {
     });
 }
 
+export async function insertOnePost(data: Document) {
+    await conn.getDb().collection('posts').insertOne(data)
+        .then(() => {
+            console.log('Post inserted.');
+        }).catch((err: MongoError) => {
+            console.error(`ERROR in post insert: ${err.errmsg}`);
+    });
+}
+
 export async function getLatestPostName(sub: string) {
     const latestPosts = await conn.getDb().collection('posts').find(
         { subreddit: sub },

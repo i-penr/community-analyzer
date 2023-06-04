@@ -1,9 +1,10 @@
 import express from 'express';
-import { insertSub, getSubs, deleteAllSubs, deleteSubById, deleteSubByName } from '../controllers/subreddits';
+import { insertSub, getSubs, deleteAllSubs, deleteSubById, deleteSubByName, getSubByName } from '../controllers/subreddits';
 
 const router = express.Router();
 
 router.get('/all', getSubs);
+router.get('/get/:sub', getSubByName);
 
 router.post('/insert/:sub', insertSub);
 

@@ -4,6 +4,7 @@ import snoo from '../snoowrap/startConn';
 import { Db, ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import Snoowrap from 'snoowrap';
+import { getIndividualSub } from '../db/subQueries';
 
 let db: Db;
 
@@ -40,6 +41,16 @@ export async function getSubs(req: Request, res: Response) {
         console.log(err);
         res.status(500).send({ err: 'Unable to find documents' });
     });
+}
+
+export async function getSubByName(req: Request, res: Response) {
+    const data = getIndividualSub(req.params.sub);
+
+    if (!data) {
+        return res.status(404).send({ msg: 'Sub not in db' });
+    } 
+
+    return res.status(200).send(data);
 }
 
 

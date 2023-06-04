@@ -1,7 +1,7 @@
 import CalHeatmap from "cal-heatmap";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useFetch } from "./customHooks/useFetch";
-import { IWidgets } from "./interfaces/IWidgets";
+import { IWidgets } from "./interfaces/IWidget";
 // @ts-ignore
 import Tooltip from 'cal-heatmap/plugins/Tooltip';
 import './css/calendar.css';

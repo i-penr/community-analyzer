@@ -44,7 +44,7 @@ export async function getSubs(req: Request, res: Response) {
 }
 
 export async function getSubByName(req: Request, res: Response) {
-    const data = getIndividualSub(req.params.sub);
+    const data = await getIndividualSub(req.params.sub);
 
     if (!data) {
         return res.status(404).send({ msg: 'Sub not in db' });

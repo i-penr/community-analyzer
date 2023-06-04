@@ -15,7 +15,8 @@ export async function upsertSub(sub: string, data: Document[]) {
 
 export async function getIndividualSub(sub: string) {
     return await conn.getDb().collection('subs').findOne(
-        { subreddit: sub.toLowerCase() }
+        { subreddit: sub.toLowerCase() },
+        { collation: { locale: 'en', strength: 2} }
     );
 }
 

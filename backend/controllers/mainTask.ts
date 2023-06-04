@@ -17,7 +17,7 @@ dotenv.config();
 
 export async function requestTask(req: Request, res: Response) {
     if (req.params.sub.length > 22 || req.params.sub.length === 0) 
-        return res.status(400).send({ msg: 'ERROR: Bad request (400)', statusCode: 400 });
+        return res.status(400).send({ msg: 'ERROR: Bad request (400)' });
 
     const job = await addJobToQueue({ type: 'StartJob', sub: String(req.params.sub) });
 

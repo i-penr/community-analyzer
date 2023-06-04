@@ -13,6 +13,12 @@ export async function upsertSub(sub: string, data: Document[]) {
     });
 }
 
+export async function getIndividualSub(sub: string) {
+    return await conn.getDb().collection('subs').findOne(
+        { subreddit: sub.toLowerCase() }
+    );
+}
+
 export async function getSubLang(sub: string) {
     const subreddit = await conn.getDb().collection('subs').findOne(
                                 { subreddit: sub },

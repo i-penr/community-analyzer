@@ -12,11 +12,13 @@ export async function insertPosts(data: Document[]) {
 }
 
 export async function insertOnePost(data: Document) {
-    await conn.getDb().collection('posts').insertOne(data)
+    return await conn.getDb().collection('posts').insertOne(data)
         .then(() => {
             console.log('Post inserted.');
         }).catch((err: MongoError) => {
             console.error(`ERROR in post insert: ${err.errmsg}`);
+            if (err.errmsg.includes('duplicate key error'))
+                return 409;
     });
 }
 
@@ -33,10 +35,19 @@ export async function getLatestPostName(sub: string) {
     } else return '';
 }
 
+export async function getLatestPost(sub: string) {
+    const latestPost = await conn.getDb().collection('posts').findOne(
+        { subreddit: sub },
+        { collation: { locale: 'en', strength: 2 }, sort: { created: -1 } }
+    );
+
+    return latestPost;
+}
+
 export async function getPostsFromDb(sub: string) {
     return await conn.getDb().collection('posts').find(
         { subreddit: sub },
-        { sort: { created: -1 }}
-    ).collation({ locale: 'en', strength: 2 }).toArray();
+        { collation: { locale: 'en', strength: 2 }, sort: { created: -1 }}
+    ).toArray();
 }
 

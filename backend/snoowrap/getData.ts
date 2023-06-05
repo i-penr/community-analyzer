@@ -3,7 +3,15 @@ import snoo from './startConn';
 
 export async function fetchAllNewPosts(sub: string, before: string) {
     try {
-        return (await snoo.getSubreddit(sub).getNew({ before: before })).fetchAll({ amount: 0, append: true });
+        let posts = (await snoo.getSubreddit(sub).getNew({ before: before })).fetchAll({ amount: 1000 });
+
+        if (JSON.parse(JSON.stringify(posts)).length === 0) {
+            console.log("hoo")
+            posts = (await snoo.getSubreddit(sub).getNew()).fetchAll({ amount: 1000 });
+        }
+
+        return posts;
+
     } catch (err: any) {
         if (err.statusCode == 404) {
             return [];

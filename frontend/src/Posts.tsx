@@ -101,7 +101,7 @@ export const Posts: FC<PostsProps> = (props) => {
                                 </div>
                             </div>
                         ))}
-                        <button type="submit" className="btn btn-primary d-block my-2">Search</button>
+                        <button type="submit" className="btn btn-primary d-block my-2">Apply Filters</button>
                     </form>
                 </div>
             </>}

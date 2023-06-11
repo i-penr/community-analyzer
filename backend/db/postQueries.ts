@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import conn from './db';
 import { MongoError } from 'mongodb';
 import { isDeleted } from '../snoowrap/isDeleted';

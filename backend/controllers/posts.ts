@@ -135,7 +135,10 @@ export async function searchPostsWithFilters(req: Request, res: Response) {
         const filter: any = {};
 
         if (post) {
-            filter.title = { $regex: new RegExp(post, 'i') };
+            filter.$or =  [
+                { title: { $regex: new RegExp(decodeURIComponent(post), "i") } },
+                { selftext: { $regex: new RegExp(decodeURIComponent(post), "i") } }
+            ];
         }
 
         if (user) {

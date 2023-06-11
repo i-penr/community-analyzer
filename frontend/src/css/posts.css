@@ -1,0 +1,101 @@
+.Posts .inputArea {
+    width: 60%;
+    margin: auto;
+    padding: 5px;
+    margin-top: 50px;
+}
+
+.Posts .main {
+    overflow: hidden;
+    margin: auto;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.Posts input {
+    border-radius: 5px !important;
+}
+
+.Posts .main {
+    width: 80%;
+}
+
+.Posts .secondaryInput {
+    height: 30px;
+}
+
+.Posts span {
+    border-radius: 0;
+}
+
+.Posts .secondary {
+    margin-top: 1%;
+    margin-bottom: 2%;
+    margin-right: 3%;
+}
+
+.inputArea {
+    background-color: rgb(209, 221, 243);
+    border: 2px transparent #369;
+    border-radius: 5px;
+}
+
+.Posts .Post {
+    padding-bottom: 10px;
+    overflow: hidden;
+    width: 60%;
+    margin: 20px auto;
+    padding: 10px;
+    position: relative;
+}
+
+.Post:hover {
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
+}
+
+.Posts .selftext {
+    max-height: 100px;
+    height: fit-content;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.Post .title {
+    font-size: medium;
+    font-weight: normal;
+    margin-bottom: 1px;
+}
+
+.Post a {
+    text-decoration: none;
+}
+
+.Post .domain {
+    color: #888;
+    font-size: small;
+    white-space: nowrap;
+}
+
+.domain a {
+    color: #888;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    max-width: 19em;
+}
+
+.tagline a {
+    color: #369;
+    text-decoration: none;
+}
+
+.Post .thumbnail {
+    vertical-align: center;
+    float: left;
+}
+
+.Post .body {
+    width: 70%
+}

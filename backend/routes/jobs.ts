@@ -3,6 +3,6 @@ import { getJobs } from '../controllers/jobs';
 
 const router = express.Router();
 
-router.get('/fetch/:sub', getJobs);
+router.get('/getAll', getJobs);
 
 export { router as jobRouter }

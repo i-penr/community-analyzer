@@ -35,10 +35,10 @@ export async function getLatestPostName(sub: string) {
     } else return '';
 }
 
-export async function getLatestPost(sub: string) {
+export async function getLatestPost(sub: string, sort: -1 | 1) {
     const latestPost = await conn.getDb().collection('posts').findOne(
         { subreddit: sub },
-        { collation: { locale: 'en', strength: 2 }, sort: { created: -1 } }
+        { collation: { locale: 'en', strength: 2 }, sort: { created: sort } }
     );
 
     return latestPost;
@@ -51,3 +51,12 @@ export async function getPostsFromDb(sub: string) {
     ).toArray();
 }
 
+export async function searchPosts(filter: { date?: string, post?: string, user?: string, subreddit?: string }, orderByObj: any, skip: number, limit: number) {
+    return await conn.getDb().collection('posts').find(filter,
+        { collation: { locale: 'en', strength: 2 }} 
+     ).sort(orderByObj).skip(skip).limit(limit).toArray();
+}
+
+export async function countPosts(filter?: { date: string, post: string, user: string, subreddit?: string }) {
+    return conn.getDb().collection('posts').countDocuments(filter);
+}

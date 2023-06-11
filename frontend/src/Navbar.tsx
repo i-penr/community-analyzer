@@ -8,7 +8,7 @@ export const Navbar: FC<INavbarProps> = () => {
     const navigation = [
         { name: "Home", to: "/" },
         { name: "Subreddits", to: "/subList" },
-        { name: "Search posts", to: "/search" }
+        { name: "Search posts", to: "/posts" }
     ]
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

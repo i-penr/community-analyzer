@@ -1,0 +1,51 @@
+.subscribers {
+    height: 400px;
+    width: 100%;
+}
+
+.ct-chart-line {
+    stroke: #00aaff;
+    stroke-width: 3px;
+    fill: none;
+}
+
+.ct-point ct-series {
+    stroke: #fff;
+    stroke-width: 10px;
+    fill: #00aaff;
+}
+
+.ct-axis {
+    stroke: #ccc;
+    stroke-width: 1px;
+}
+
+.ct-grid {
+    stroke: #eee;
+    stroke-width: 1px;
+    stroke-dasharray: 2;
+}
+
+.ct-labels {
+    font-size: 12px;
+    fill: #555;
+}
+
+.ct-tooltip {
+    background-color: rgba(0, 170, 255, 0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.ct-tooltip:before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 6px;
+    border-color: transparent transparent rgba(0, 170, 255, 0.8) transparent;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+}

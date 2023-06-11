@@ -3,7 +3,7 @@ import { getAllJobs } from "../db/jobQueries";
 
 
 export async function getJobs(req: Request, res: Response) {
-    const jobs = await getAllJobs(req.params.sub);
+    const jobs = await getAllJobs();
 
     if (jobs.length > 0) {
         return res.status(200).send(jobs);

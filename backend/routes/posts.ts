@@ -1,10 +1,12 @@
 import express from 'express';
-import { getPosts, deleteAllPosts, deletePostById, getPostsFromSub, postPostById, postPostByUrl } from '../controllers/posts';
+import { searchPostsWithFilters, getPosts, deleteAllPosts, deletePostById, getPostsFromSub, postPostById, postPostByUrl, getFirstPost } from '../controllers/posts';
 
 const router = express.Router();
 
 router.get('/all', getPosts);
-router.get('/:sub', getPostsFromSub);
+router.get('/latest/:sub&:sort', getFirstPost);
+router.get('/search', searchPostsWithFilters);
+router.get('/get/:sub', getPostsFromSub);
 
 router.post('/id/:id', postPostById);
 router.post('/url/*', postPostByUrl);

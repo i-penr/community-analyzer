@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';
 import { startTask } from './mainTask';
-import { getLatestPost, getPostsFromDb, insertOnePost } from '../db/postQueries';
+import { countPosts, getLatestPost, getPostsFromDb, insertOnePost, searchPosts } from '../db/postQueries';
 import { upsertJob } from '../db/jobQueries';
 import { upsertHeatmap } from '../db/heatmapsQueries';
 import { upsertKeywords } from '../db/keywordsQueries';
@@ -33,6 +33,22 @@ export async function getPostsFromSub(req: Request, res: Response) {
     } else {
         return res.status(200).send(posts);
     }
+}
+
+export async function getFirstPost(req: Request, res: Response) {
+    const sub = req.params.sub;
+    const sort = Number(req.params.sort);
+
+    if (sort * sort !== 1)
+        return res.status(400).send({ msg: 'Bad request' });
+
+    const post = await getLatestPost(sub, sort as 1 | -1);
+
+    if (!post) {
+        return res.status(404).send({ msg: 'Post not found' });
+    }
+
+    return res.status(200).send(post);
 }
 
 // POST
@@ -87,7 +103,7 @@ async function updateTables(sub: string) {
 }
 
 async function checkPostIsNewerThanDb(post: any) {
-    if (post.created > (await getLatestPost(post.subreddit))?.created) {
+    if (post.created > (await getLatestPost(post.subreddit, -1))?.created) {
         await startTask(post.subreddit);
         await insertOnePost(JSON.parse(JSON.stringify(post)));
         return 200;
@@ -104,6 +120,74 @@ async function checkIfSubIsInDb(sub: string) {
     if (!subDb) {
         await startTask(sub);
         return 200;
+    }
+}
+
+export async function searchPostsWithFilters(req: Request, res: Response) {
+    const { post, sub, date, user, orderBy }: any = req.query;
+    const { page, limit }: any = req.query;
+    let posts = [];
+    const orderByObj = getOrderByOjb(orderBy);
+
+    try {
+        const skip: number = (Number(page) - 1) * Number(limit);
+
+        const filter: any = {};
+
+        if (post) {
+            filter.title = { $regex: new RegExp(post, 'i') };
+        }
+
+        if (user) {
+            filter.author = { $regex: new RegExp(`^${user}$`, 'i') };
+        }
+
+        if (date) {
+            const startDate = new Date(date);
+            const endDate = new Date(startDate.getTime() + 86400*1000);
+
+            filter.created = {
+                $gte: Number(Math.floor(startDate.getTime() / 1000)),
+                $lt: Number(Math.floor(endDate.getTime() / 1000))
+            };
+        }
+
+        if (sub !== 'Any') {
+            filter.subreddit = { $regex: new RegExp(`^${sub}$`, 'i') };
+        }
+
+        posts = await searchPosts(filter, orderByObj, skip, Number(limit));
+        const totalPosts = await countPosts(filter);
+        const totalPages = Math.ceil(totalPosts / Number(limit));
+
+        return res.status(200).send({ posts: posts, totalPosts: totalPosts, currentPage: page, totalPages: totalPages });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ msg: 'Internal Server Error' });
+    }
+}
+
+function getOrderByOjb(orderBy: string) {
+    switch (orderBy) {
+        case 'Latest':
+            return { created: -1 }
+        case 'Oldest':
+            return { created: 1 }
+        case 'Title A-Z':
+            return { title: 1 }
+        case 'Title Z-A':
+            return { title: -1 }
+        case 'Description A-Z':
+            return { selftext: 1 }
+        case 'Description Z-A':
+            return { selftext: -1 }
+        case 'User A-Z':
+            return { author: 1 }
+        case 'User Z-A':
+            return { author: 1 }
+        default:
+            return { created: -1 }
     }
 }
 
@@ -148,6 +232,7 @@ async function removeUselessData(doc: Document) {
     delete post.all_awardings;
     delete post.awarders;
     delete post.comments;
+    delete post.subscribers; // We remove this because this counts present subscribers, not the post's date
 
     return post;
 }

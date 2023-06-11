@@ -24,6 +24,6 @@ export async function updateJobStatus(status: string, sub: string) {
     )
 }
 
-export async function getAllJobs(sub: string) {
-    return await conn.getDb().collection('jobs').find({ sub: sub }).toArray();
+export async function getAllJobs() {
+    return await conn.getDb().collection('jobs').find({}, { sort: { sub: 1 }}).toArray();
 }

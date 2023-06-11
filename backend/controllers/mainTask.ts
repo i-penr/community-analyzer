@@ -12,6 +12,8 @@ import { generateKeywords } from '../services/keywordGenerator';
 import { upsertKeywords } from '../db/keywordsQueries';
 import { generateHeatmapData } from '../services/heatmapDataGenerator';
 import { upsertHeatmap } from '../db/heatmapsQueries';
+import { generateSubscriberGrowthData } from '../services/subscriberGrowthChartGenerator';
+import { upsertSubscriberData } from '../db/subscribersQueries';
 dotenv.config();
 
 
@@ -60,6 +62,7 @@ export async function startTask(sub: string) {
         await fetchAndInsertSub(sub);
         await generateAndInsertKeywords(sub);
         await generateAndInsertHeatmapData(sub);
+        await generateAndInsertSubscriberGrowthData(sub);
         await upsertJob(sub);
     }
 
@@ -74,6 +77,11 @@ async function generateAndInsertHeatmapData(sub: string) {
 async function generateAndInsertKeywords(sub: string) {
     const keywords: { term: string; score: number; numDocuments: number; }[] = await generateKeywords(sub);
     await upsertKeywords(sub, keywords);
+}
+
+async function generateAndInsertSubscriberGrowthData(sub: string) {
+    const subscribersData: { date: string; subscribers: number }[] = await generateSubscriberGrowthData(sub);
+    await upsertSubscriberData(sub, subscribersData);
 }
 
 async function fetchAndInsertSub(sub: string) {

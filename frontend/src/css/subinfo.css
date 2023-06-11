@@ -1,0 +1,13 @@
+.icon {
+    max-width: 15%;
+    max-height: 15%;
+}
+
+p {
+    text-indent: item;
+    /* text-align: justify; */
+}
+
+table {
+    table-layout: fixed;
+}

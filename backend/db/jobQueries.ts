@@ -1,10 +1,10 @@
 import conn from './db';
 import { MongoError } from 'mongodb';
 
-export async function upsertJob(sub: string) {
+export async function upsertJob(sub: string, status: string) {
     await conn.getDb().collection('jobs').updateOne(
         { sub: sub.toLowerCase() },
-        { $set: { status: 'available', sub: sub }, $currentDate: { lastUpdated: true } },
+        { $set: { status: status, sub: sub }, $currentDate: { lastUpdated: true } },
         { upsert: true }
     ).then(() => {
         console.log(`Job updated for subreddit ${sub}`);
@@ -20,7 +20,7 @@ export async function getJobFromDb(sub: string) {
 export async function updateJobStatus(status: string, sub: string) {
     await conn.getDb().collection('jobs').updateOne(
         { sub: sub },
-        { $set: { status: '' }}
+        { $set: { status: status }}
     )
 }
 

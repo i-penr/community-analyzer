@@ -1,15 +1,10 @@
 import { FC, FormEvent, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import './css/navbar.css'
-interface INavbarProps {};
+interface INavbarProps { };
 
 export const Navbar: FC<INavbarProps> = () => {
     const [sub, setSub] = useState('');
-    const navigation = [
-        { name: "Home", to: "/" },
-        { name: "Subreddits", to: "/subList" },
-        { name: "Search posts", to: "/posts" }
-    ]
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,29 +19,88 @@ export const Navbar: FC<INavbarProps> = () => {
             </button>
 
             <div className="collapse navbar-collapse" id="navbarNav">
-                <div className="form-inline mx-auto">
-                    <form className="form-inline input-group" onSubmit={ (e) => { handleSubmit(e) }}>
+                {/* <div className="form-inline mx-auto">
+                    <form className="form-inline input-group" onSubmit={(e) => { handleSubmit(e) }}>
                         <span className="input-group-text">r/</span>
-                        <input type="text" placeholder="Subreddit" value={sub} onChange={ (e) => setSub((e.target as HTMLInputElement).value) } />
+                        <input type="text" placeholder="Get Subreddit Stats" value={sub} onChange={(e) => setSub((e.target as HTMLInputElement).value)} />
                         <Link to={`/sub/${sub}`}>
                             <button className="btn btn-primary" type="submit">Search</button>
                         </Link>
                     </form>
-                </div>
-            
+                </div> */}
+
                 <div className="navbar-nav my-2 my-lg-0">
-                    { navigation.map((item) => (
-                        <NavLink
-                            exact
-                            key={item.name}
-                            to={item.to}
-                            className={ (isActive: boolean ) => {
-                                return ('nav-link px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
-                            } } 
-                        >
-                        { item.name }
-                        </NavLink>
-                    ))}
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <NavLink
+                                exact
+                                to="/"
+                                className={(isActive: boolean) => {
+                                    return ('nav-link px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
+                                }}
+                            >
+                                Home
+                            </NavLink>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                Subreddits
+                            </a>
+                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <NavLink
+                                        exact
+                                        to="/subList"
+                                        className={(isActive: boolean) => {
+                                            return ('dropdown-item px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
+                                        }}
+                                    >
+                                        Subreddit List
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        exact
+                                        to="/addSub"
+                                        className={(isActive: boolean) => {
+                                            return ('dropdown-item px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
+                                        }}
+                                    >
+                                        Add a Subreddit
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                Posts
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <NavLink
+                                        exact
+                                        to="/searchPosts"
+                                        className={(isActive: boolean) => {
+                                            return ('dropdown-item px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
+                                        }}
+                                    >
+                                        Search Posts
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        exact
+                                        to="/addPost"
+                                        className={(isActive: boolean) => {
+                                            return ('dropdown-item px-3 py-2 rounded' + (isActive ? ' active fw-bold' : ''));
+                                        }}
+                                    >
+                                        Add Post
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>

@@ -21,7 +21,7 @@ function App() {
           <Route path='/subList'>
             <Sublist />
           </Route>
-          <Route path='/posts'>
+          <Route path='/searchPosts'>
             <Posts />
           </Route>
         </Switch>

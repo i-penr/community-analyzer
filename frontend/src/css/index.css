@@ -4,7 +4,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background-color: rgb(209, 227, 227) !important; */
+  background-color: rgb(229, 236, 248) !important;
 }
 
 * {
@@ -15,8 +15,10 @@ body {
   margin: 10px auto;
   width: 50%;
   padding: auto;
-  outline: solid 1px rgb(13, 17, 31);
+  outline: solid 1px rgb(222, 223, 228);
   text-align: center;
+  background-color: rgb(243, 245, 251);
+  box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
 }
 
 .ch-container {

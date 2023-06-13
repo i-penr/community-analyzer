@@ -6,7 +6,7 @@ import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';
 import { startTask } from './mainTask';
 import { countPosts, getLatestPost, getPostsFromDb, insertOnePost, searchPosts } from '../db/postQueries';
-import { upsertJob } from '../db/jobQueries';
+import { updateJobStatus, upsertJob } from '../db/jobQueries';
 import { upsertHeatmap } from '../db/heatmapsQueries';
 import { upsertKeywords } from '../db/keywordsQueries';
 import { generateHeatmapData } from '../services/heatmapDataGenerator';
@@ -55,7 +55,7 @@ export async function getFirstPost(req: Request, res: Response) {
 export async function postPostByUrl(req: Request, res: Response) {
     const url: string = req.params[0];
 
-    if (!url.startsWith('https://www.reddit.com/r/'))
+    if (!url.startsWith('https://www.reddit.com/r/') && !url.startsWith('http://www.reddit.com/r/') )
         return res.status(400).send({ msg: 'URL not valid' });
 
     await handlePostResult(url.split("/")[6], res);
@@ -97,9 +97,10 @@ async function updateTables(sub: string) {
     const calendarData = await generateHeatmapData(sub);
     const keywordData = await generateKeywords(sub);
 
-    await upsertJob(sub);
+    await updateJobStatus(sub, 'pending');
     await upsertHeatmap(sub, calendarData);
     await upsertKeywords(sub, keywordData);
+    await updateJobStatus(sub, 'available');
 }
 
 async function checkPostIsNewerThanDb(post: any) {
@@ -198,9 +199,11 @@ async function handlePostResult(id: string, res: Response<any, Record<string, an
     const result = await postIndividualPost(id);
 
     if (result === 200) {
-        res.status(200).send({ msg: 'Post inserted successfully' });
+        res.status(200).send({ msg: 'Post inserted successfully.', statusCode: 200 });
+    } else if (result === 409) {
+        res.status(409).send({ msg: 'That post is already in the database.', statusCode: 409 })
     } else {
-        res.status(result).send({ msg: 'There was an error saving the submission.' });
+        res.status(result).send({ msg: 'There was an error saving the submission.', statusCode: result });
     }
 }
 

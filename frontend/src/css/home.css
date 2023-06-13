@@ -1,0 +1,45 @@
+.Home .metadata {
+    font-size: x-large;
+    background-color: rgb(187, 206, 241);
+    border: 1px solid rgb(175, 181, 189);
+    border-radius: 7px;
+}
+
+.Home a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.Home .submit {
+    height: 50px;
+}
+
+.Home .link {
+    background-color: rgb(243, 245, 251);
+    border-radius: 20px;
+    padding: 15px 20px 0 20px;
+    margin: 0 7px;
+}
+
+.Home li {
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.Home .link:hover {
+    background-color: rgb(187, 206, 241);
+}
+
+.Home ul {
+    padding: 3%;
+    display: inline-block;
+}
+
+.Home .githubButton {
+    margin: 4% 0;
+    color: white;
+}

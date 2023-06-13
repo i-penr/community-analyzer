@@ -96,7 +96,7 @@ export const Navbar: FC<INavbarProps> = () => {
             <form className="form-inline" onSubmit={(e) => { handleSubmit(e) }}>
                 <div className="input-group">
                     <span className="input-group-text">r/</span>
-                    <input type="text" placeholder="Go to a Subreddit" value={sub} onChange={(e) => setSub((e.target as HTMLInputElement).value)} />
+                    <input type="text" placeholder="View Subreddit Stats" value={sub} onChange={(e) => setSub((e.target as HTMLInputElement).value)} />
                     <Link to={`/sub/${sub}`}>
                         <button className="btn btn-primary" type="submit">Search</button>
                     </Link>

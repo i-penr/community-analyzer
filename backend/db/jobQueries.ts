@@ -17,7 +17,7 @@ export async function getJobFromDb(sub: string) {
     return await conn.getDb().collection('jobs').findOne({ sub: sub.toLowerCase() });
 }
 
-export async function updateJobStatus(status: string, sub: string) {
+export async function updateJobStatus(sub: string, status: string) {
     await conn.getDb().collection('jobs').updateOne(
         { sub: sub },
         { $set: { status: status }}

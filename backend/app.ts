@@ -6,6 +6,7 @@ import { Queue } from 'bullmq';
 import { widgetRouter } from './routes/widgets';
 import { mainTaskRouter } from './routes/mainTask';
 import { jobRouter } from './routes/jobs';
+import { metadataRouter } from './routes/metadata';
 
 export const app = express();
 
@@ -41,5 +42,6 @@ app.use('/posts', postRouter);
 app.use('/subs', subredditRouter);
 app.use('/fetch', mainTaskRouter);
 app.use('/jobs', jobRouter);
+app.use('/metadata', metadataRouter);
 
 export default app;

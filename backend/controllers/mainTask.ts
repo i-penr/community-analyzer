@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { addJobToQueue } from '../bullmq/queue';
 import { QueueEvents } from 'bullmq';
 import { fetchAllNewPosts, fetchSubMetadata } from '../snoowrap/getData';
-import { upsertJob, getJobFromDb, updateJobStatus } from '../db/jobQueries';
+import { upsertJob, getJobFromDb } from '../db/jobQueries';
 import { insertPosts, getLatestPostName } from '../db/postQueries';
 import * as dotenv from 'dotenv';
 import { upsertSub } from '../db/subQueries';
@@ -21,7 +21,7 @@ export async function requestTask(req: Request, res: Response) {
     if (req.params.sub.length > 22 || req.params.sub.length === 0)
         return res.status(400).send({ msg: 'ERROR: Bad request (400)' });
 
-    const job = await addJobToQueue({ type: 'StartJob', sub: String(req.params.sub) });
+    const job = await addJobToQueue({ type: 'DownloadJob', sub: String(req.params.sub) });
 
     const queueEvents = new QueueEvents('mainQueue', {
         connection: {
@@ -50,27 +50,20 @@ export async function startTask(sub: string) {
     const job = await getJobFromDb(sub);
 
     if (!job || new Date().getTime() - job.lastUpdated.getTime() >= 10) { // 10800000 = 3h
-        try {
-            const latestPostName = await getLatestPostName(sub);
-            const postData = await fetchAllNewPosts(sub, latestPostName);
+        const latestPostName = await getLatestPostName(sub);
+        const postData = await fetchAllNewPosts(sub, latestPostName);
 
-            if (postData && postData.length > 0) {
-                await insertPosts(JSON.parse(JSON.stringify(postData)));
-            } else if (!latestPostName) {
-                return 404;
-            }
-
-            await upsertJob(sub, 'pending');
-            await fetchAndInsertSub(sub);
-            await generateAndInsertKeywords(sub);
-            await generateAndInsertHeatmapData(sub);
-            await generateAndInsertSubscriberGrowthData(sub);
-        } catch(err: any) {
-            console.log(err);
-            await updateJobStatus(sub, 'errored');
-            return 500;
+        if (postData && postData.length > 0) {
+            await insertPosts(JSON.parse(JSON.stringify(postData)));
+        } else if (!latestPostName) {
+            return 404;
         }
-        
+
+        await upsertJob(sub, 'pending');
+        await fetchAndInsertSub(sub);
+        await generateAndInsertKeywords(sub);
+        await generateAndInsertHeatmapData(sub);
+        await generateAndInsertSubscriberGrowthData(sub);
     }
 
     await upsertJob(sub, 'available');

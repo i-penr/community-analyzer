@@ -18,7 +18,7 @@ export const Sublist: FC<ISublistProps> = (props) => {
     }, [subList]);
 
     function getColor(status: string) {
-        return status === 'available' ? "green" : "red";
+        return status === 'available' ? "green" : status === 'pending' ? "orange" : "red";
     }
 
     function filter(search: string) {
@@ -49,7 +49,7 @@ export const Sublist: FC<ISublistProps> = (props) => {
               <p>There is no register of "{ inputValue }". Try <Link to={`/sub/${inputValue}`}>adding it</Link>.</p>
             }
             { foundList && foundList.map((job: any) => (
-                <div className="sub-container">
+                <div key={job.sub} className="sub-container">
                     <Link to={`/sub/${job.sub}`}>
                         <div className="sub border border-primary rounded">
                             <h3 className="sub-title">r/{job.sub}</h3>

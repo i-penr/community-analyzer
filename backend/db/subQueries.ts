@@ -28,3 +28,7 @@ export async function getSubLang(sub: string) {
 
     return subreddit?.lang;
 }
+
+export async function countAllSubs() {
+    return conn.getDb().collection('subs').countDocuments();
+}

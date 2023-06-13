@@ -61,3 +61,7 @@ export async function searchPosts(filter: { date?: string, post?: string, user?:
 export async function countPosts(filter?: { date: string, post: string, user: string, subreddit?: string }) {
     return conn.getDb().collection('posts').countDocuments(filter);
 }
+
+export async function countAllPosts() {
+    return conn.getDb().collection('posts').countDocuments();
+}

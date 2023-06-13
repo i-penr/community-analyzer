@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { AddPost } from './AddPost';
+import { AddSubreddit } from './AddSubreddit';
 import { Home } from './Home';
 import { Navbar } from './Navbar';
 import { Posts } from './Posts';
@@ -23,6 +25,12 @@ function App() {
           </Route>
           <Route path='/searchPosts'>
             <Posts />
+          </Route>
+          <Route path='/addPost'>
+            <AddPost />
+          </Route>
+          <Route path='/addSub'>
+            <AddSubreddit />
           </Route>
         </Switch>
         </div>

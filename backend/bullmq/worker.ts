@@ -8,7 +8,7 @@ dotenv.config();
 
 const workerHandler = async (job: Job<WorkerJob>) => {
     switch (job.data.type) {
-        case 'StartJob': {
+        case 'DownloadJob': {
             try {
                 return await startTask(job.data.sub);
             } catch (err: unknown) {
@@ -25,7 +25,8 @@ const workerOptions: WorkerOptions = {
         host: process.env.REDIS_HOST,
         port: Number(process.env.REDIS_PORT)
     },
-    autorun: false
+    autorun: false,
+    lockDuration: 1500000
 };
 
 const worker = new Worker('mainQueue', workerHandler, workerOptions);

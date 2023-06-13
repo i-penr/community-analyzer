@@ -11,6 +11,7 @@ As well as being able to access and see the website from the internet, thanks to
 ### Recommendations
 ---
 1. Host the app in a **Linux machine**. The steps will show how to set it up in a Linux machine (more specifically, in Ubuntu), as it is usually better for hosting. Of course, it can also be done in other OSs.
+2. Have some knowledge about Git, Docker and Docker Compose, as these will be the most important parts of the process.
 
 ### Requirements
 ---

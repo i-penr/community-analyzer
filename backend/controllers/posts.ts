@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import conn from '../db/db';
-import { Db, ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';

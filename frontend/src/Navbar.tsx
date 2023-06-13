@@ -19,16 +19,6 @@ export const Navbar: FC<INavbarProps> = () => {
             </button>
 
             <div className="collapse navbar-collapse" id="navbarNav">
-                {/* <div className="form-inline mx-auto">
-                    <form className="form-inline input-group" onSubmit={(e) => { handleSubmit(e) }}>
-                        <span className="input-group-text">r/</span>
-                        <input type="text" placeholder="Get Subreddit Stats" value={sub} onChange={(e) => setSub((e.target as HTMLInputElement).value)} />
-                        <Link to={`/sub/${sub}`}>
-                            <button className="btn btn-primary" type="submit">Search</button>
-                        </Link>
-                    </form>
-                </div> */}
-
                 <div className="navbar-nav my-2 my-lg-0">
                     <ul className="navbar-nav">
                         <li className="nav-item">
@@ -103,6 +93,15 @@ export const Navbar: FC<INavbarProps> = () => {
                     </ul>
                 </div>
             </div>
+            <form className="form-inline" onSubmit={(e) => { handleSubmit(e) }}>
+                <div className="input-group">
+                    <span className="input-group-text">r/</span>
+                    <input type="text" placeholder="Go to a Subreddit" value={sub} onChange={(e) => setSub((e.target as HTMLInputElement).value)} />
+                    <Link to={`/sub/${sub}`}>
+                        <button className="btn btn-primary" type="submit">Search</button>
+                    </Link>
+                </div>
+            </form>
         </nav>
     );
 }

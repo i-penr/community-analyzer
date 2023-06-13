@@ -7,6 +7,9 @@ import { widgetRouter } from './routes/widgets';
 import { mainTaskRouter } from './routes/mainTask';
 import { jobRouter } from './routes/jobs';
 import { metadataRouter } from './routes/metadata';
+import * as dotenv from 'dotenv';
+import { debugRouter } from './routes/debug';
+dotenv.config();
 
 export const app = express();
 
@@ -19,22 +22,24 @@ app.use((req, res, next) => {
     next();
 });
 
-const arena = Arena({
-    BullMQ: Queue,
-    queues: [
-        {
-            type: 'bullmq',
-            name: 'mainQueue',
-            hostId: 'server',
-            redis: {
-                host: 'comm-redis',
-                port: 6379
+if (process.env.DEBUG_MODE === "true") {
+    const arena = Arena({
+        BullMQ: Queue,
+        queues: [
+            {
+                type: 'bullmq',
+                name: 'mainQueue',
+                hostId: 'server',
+                redis: {
+                    host: process.env.REDIS_HOST,
+                    port: Number(process.env.REDIS_PORT)
+                }
             }
-        }
-    ]
-});
-
-app.use('/arena', arena);
+        ]
+    });
+    app.use('/arena', arena);
+    app.use('/debug', debugRouter);
+}
 
 app.use(express.json());
 app.use('/widget', widgetRouter);

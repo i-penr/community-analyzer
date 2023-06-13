@@ -5,35 +5,12 @@ import { Request, Response } from 'express';
 import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';
 import { startTask } from './mainTask';
-import { countPosts, getLatestPost, getPostsFromDb, insertOnePost, searchPosts } from '../db/postQueries';
-import { updateJobStatus, upsertJob } from '../db/jobQueries';
+import { countPosts, getLatestPost, insertOnePost, searchPosts } from '../db/postQueries';
+import { updateJobStatus } from '../db/jobQueries';
 import { upsertHeatmap } from '../db/heatmapsQueries';
 import { upsertKeywords } from '../db/keywordsQueries';
 import { generateHeatmapData } from '../services/heatmapDataGenerator';
 import { generateKeywords } from '../services/keywordGenerator';
-
-let db: Db;
-
-
-// GET
-export async function getPosts(req: Request, res: Response) {
-    conn.getDb().collection('posts').find({}).toArray().then((posts) => {
-        res.status(200).send(posts);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send({ err: 'Unable to find documents' });
-    });
-}
-
-export async function getPostsFromSub(req: Request, res: Response) {
-    const posts = await getPostsFromDb(req.params.sub);
-
-    if (posts.length === 0) {
-        res.status(404).send({ msg: 'Sub not in db' });
-    } else {
-        return res.status(200).send(posts);
-    }
-}
 
 export async function getFirstPost(req: Request, res: Response) {
     const sub = req.params.sub;
@@ -204,31 +181,6 @@ async function handlePostResult(id: string, res: Response<any, Record<string, an
         res.status(409).send({ msg: 'That post is already in the database.', statusCode: 409 })
     } else {
         res.status(result).send({ msg: 'There was an error saving the submission.', statusCode: result });
-    }
-}
-
-// DELETE
-export async function deleteAllPosts(req: Request, res: Response) {
-    db = conn.getDb();
-
-    db.collection('posts').deleteMany({}).then((result) => {
-        res.status(200).send({ msg: `Deleted ${result.deletedCount} items` });
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send({ err: err });
-    });
-}
-
-export async function deletePostById(req: Request, res: Response) {
-    const id = req.params.id;
-
-    if (ObjectId.isValid(id)) {
-        db.collection('posts').deleteOne({ _id: new ObjectId(id) }).then((result) => {
-            res.status(200).send(result);
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).send({ err: 'Cannnot delete' });
-        });
     }
 }
 

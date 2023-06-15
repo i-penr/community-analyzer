@@ -39,7 +39,6 @@ export const Posts: FC<PostsProps> = (props) => {
         fetch(`http://localhost:8080/posts/search?${queryString}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 setSearchResults(data);
             })
             .catch((error) => {
@@ -47,8 +46,6 @@ export const Posts: FC<PostsProps> = (props) => {
             }).finally(() => {
                 setIsLoading(false);
             })
-
-        console.log(searchResults)
     }
 
 

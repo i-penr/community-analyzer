@@ -42,7 +42,6 @@
 
 .Posts .Post {
     padding-bottom: 10px;
-    overflow: hidden;
     width: 60%;
     margin: 20px auto;
     padding: 10px;
@@ -99,4 +98,12 @@
 
 .Post .body {
     width: 70%
+}
+
+.cta-expand {
+    color: rgb(139, 140, 141);
+    position: absolute;
+    right: 0;
+    top: 1;
+    padding: 10px;
 }

@@ -7,6 +7,7 @@ export const SubInfo: FC<IWidget> = ({ sub }) => {
     const { data: subData, error: subError }: any = useFetch(`http://localhost:8080/subs/get/${sub}`);
     const { data: oldestPost }: any = useFetch(`http://localhost:8080/posts/latest/${sub}&${-1}`);
     const { data: newestPost }: any = useFetch(`http://localhost:8080/posts/latest/${sub}&${1}`);
+    const { data: numPosts }: any = useFetch(`http://localhost:8080/posts/count/${sub}`);
     const [hideButtonValue, setHideButtonValue] = useState('Show More');
     const [isHidden, setIsHidden] = useState(true);
     const subColor = subData.primary_color;
@@ -45,6 +46,13 @@ export const SubInfo: FC<IWidget> = ({ sub }) => {
                                 }
                             </div>
                         </div>}
+
+                    { numPosts.numPosts && 
+                        <div>
+                            <h5 className='text-primary'>Number of posts in database</h5>
+                            <p>{ numPosts.numPosts.toLocaleString() } posts</p>
+                        </div>
+                    }
 
                     {subData.public_description &&
                         <div className='w-100 px-5 py-2'>

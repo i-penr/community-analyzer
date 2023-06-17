@@ -18,7 +18,7 @@ export const PostList: FC<IPostListProps> = ({ posts, page }) => {
             {posts.posts.map((p: any, index: number) => (
                 <div 
                     key={p.id} 
-                    className="Post container border my-2 py-2 text-start" 
+                    className="Post container border my-2 py-2 text-start overflow-hidden" 
                     onMouseOver={() => setHoveringIndex(index)}
                     onMouseLeave={() => setHoveringIndex(-1)}
                     onMouseDown={() => toggleIsOpened(index)}

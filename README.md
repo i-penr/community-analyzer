@@ -3,7 +3,7 @@
 ## About
 This is a project intended for academic purposes that uses the Reddit API to download information from Reddit and create statistics from it. These stats are easily accesible to a user through a website and all of the information is stored in a database.
 
-The project is made with React.js and uses a MongoDB database with a process queue implemented with bullmq in Redis. The frontend uses Bootstrap for styling (with css also) and modules like [CalHeatmap](https://cal-heatmap.com/) and [Chartist](https://gionkunz.github.io/chartist-js/).
+The project is made with React.js and uses a MongoDB database with a process queue implemented with bullmq in Redis. The frontend uses Bootstrap for styling (with css also) and modules like [CalHeatmap](https://cal-heatmap.com/) and [Recharts](https://recharts.org).
 
 ## Self Hosting
 As well as being able to access and see the website from the internet, thanks to the project being open source, one could clone this repository and host the database themselves. Self hosting is of course allowed, in case you wanted to download the data yourself and have it in your own local database. To make it easier, I will now explain the necessary steps to self host this app. Bear in mind that some technichal knowledge will be required to accomplish this.

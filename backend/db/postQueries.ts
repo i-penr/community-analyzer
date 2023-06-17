@@ -65,3 +65,20 @@ export async function countPosts(filter?: { date?: string, post?: string, user?:
 export async function countAllPosts() {
     return await conn.getDb().collection('posts').countDocuments({}, { collation: { strength: 2, locale: 'en' }});
 }
+
+export async function getAvgUpvoteRatio(sub: string) {
+    const subRegex = new RegExp(sub, "i")
+    return await conn.getDb().collection('posts').aggregate([
+        {
+          $match: {
+            subreddit: { $regex: subRegex }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            averageValue: { $avg: "$upvote_ratio" }
+          }
+        }
+      ]).toArray();
+}

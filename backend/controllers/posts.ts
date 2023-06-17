@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';
 import { startTask } from './mainTask';
-import { countPosts, getLatestPost, insertOnePost, searchPosts } from '../db/postQueries';
+import { countPosts, getAvgUpvoteRatio, getLatestPost, insertOnePost, searchPosts } from '../db/postQueries';
 import { updateJobStatus } from '../db/jobQueries';
 import { upsertHeatmap } from '../db/heatmapsQueries';
 import { upsertKeywords } from '../db/keywordsQueries';
@@ -186,6 +186,12 @@ export async function countPostsInSub(req: Request, res: Response) {
     const numPosts = await countPosts({ subreddit: req.params.sub });
 
     return res.status(200).send({ numPosts: numPosts });
+}
+
+export async function getPostUpvoteRatio(req: Request, res: Response) {
+    const posts = (await getAvgUpvoteRatio(req.params.sub))[0];
+
+    return res.status(200).send(posts);
 }
 
 async function removeUselessData(doc: Document) {

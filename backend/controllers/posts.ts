@@ -182,13 +182,19 @@ async function handlePostResult(id: string, res: Response<any, Record<string, an
     }
 }
 
+export async function countPostsInSub(req: Request, res: Response) {
+    const numPosts = await countPosts({ subreddit: req.params.sub });
+
+    return res.status(200).send({ numPosts: numPosts });
+}
+
 async function removeUselessData(doc: Document) {
     const post: any = doc;
 
     delete post.all_awardings;
     delete post.awarders;
     delete post.comments;
-    delete post.subscribers; // We remove this because this counts present subscribers, not the post's date
+    delete post.subreddit_subscribers; // We remove this because this counts present subscribers, not the post's date
 
     return post;
 }

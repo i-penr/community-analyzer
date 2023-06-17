@@ -58,10 +58,10 @@ export async function searchPosts(filter: { date?: string, post?: string, user?:
      ).sort(orderByObj).skip(skip).limit(limit).toArray();
 }
 
-export async function countPosts(filter?: { date: string, post: string, user: string, subreddit?: string }) {
-    return conn.getDb().collection('posts').countDocuments(filter);
+export async function countPosts(filter?: { date?: string, post?: string, user?: string, subreddit?: string }) {
+    return await conn.getDb().collection('posts').countDocuments(filter, {collation: { locale: 'en', strength: 2 }});
 }
 
 export async function countAllPosts() {
-    return conn.getDb().collection('posts').countDocuments();
+    return await conn.getDb().collection('posts').countDocuments({}, { collation: { strength: 2, locale: 'en' }});
 }

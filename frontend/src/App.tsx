@@ -3,6 +3,7 @@ import { AddPost } from './AddPost';
 import { AddSubreddit } from './AddSubreddit';
 import { Home } from './Home';
 import { Navbar } from './Navbar';
+import { NotFound } from './NotFound';
 import { Posts } from './Posts';
 import { Sublist } from './Sublist';
 import { Subreddit } from './Subreddit';
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route path='/addSub'>
             <AddSubreddit />
+          </Route>
+          <Route path='*'>
+            <NotFound />
           </Route>
         </Switch>
         </div>

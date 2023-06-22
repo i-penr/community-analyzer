@@ -21,14 +21,14 @@ export const Home: FC<IHomeProps> = (props) => {
             {error && <h1 className="text-center">There was an error</h1>}
             {metadata.numPosts && <div className="metadata py-4 my-4">
                 <table className="table table-sm table-borderless">
-                    <thead>
+                    <tr>
                         <th>Total posts</th>
                         <th>Total subreddits</th>
-                    </thead>
-                    <tbody>
+                    </tr>
+                    <tr>
                         <td>{metadata.numPosts.toLocaleString()}</td>
                         <td>{metadata.numSubs.toLocaleString()}</td>
-                    </tbody>
+                    </tr>
                 </table>
             </div>
             }

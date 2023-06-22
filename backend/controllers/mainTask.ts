@@ -61,9 +61,9 @@ export async function startTask(sub: string) {
 
         await upsertJob(sub, 'pending');
         await fetchAndInsertSub(sub);
-        await generateAndInsertKeywords(sub);
         await generateAndInsertHeatmapData(sub);
         await generateAndInsertSubscriberGrowthData(sub);
+        await generateAndInsertKeywords(sub);
     }
 
     await upsertJob(sub, 'available');

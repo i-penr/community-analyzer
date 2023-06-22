@@ -4,7 +4,7 @@ import * as stopword from 'stopword';
 import { getSubLang } from "../db/subQueries";
 const TfIdf = natural.TfIdf;
 
-const stopwordLangs: {[index: string]: string[]} = {
+const stopwordLangs: { [index: string]: string[] } = {
     "es": stopword.spa,
     "en": stopword.eng,
     "en-us": stopword.eng,
@@ -27,11 +27,13 @@ const stopwordLangs: {[index: string]: string[]} = {
 }
 
 export async function generateKeywords(sub: string) {
-    const data = await getPostsFromDb(sub);
-    const lang: string = await getSubLang(sub);
-    const stopwords = stopwordLangs[lang].concat(['just', 'not', 'don', 've', 're', 't', 'll', 'didn']);
+    const [data, lang] = await Promise.all([
+        getPostsFromDb(sub),
+        getSubLang(sub)
+    ]);
+    const stopwords = [...stopwordLangs[lang], 'just', 'not', 'don', 've', 're', 't', 'll', 'didn'];
     const tfidf = new TfIdf();
-    const keywordScores: { term: string, score: number, numDocuments: number }[]= [];
+    const keywordScores: { term: string, score: number, numDocuments: number }[] = [];
 
     data.forEach((post) => {
         tfidf.addDocument(post.title + "\n" + post.selftext + ' ');
@@ -51,7 +53,7 @@ export async function generateKeywords(sub: string) {
 }
 
 function addKeywordToList(item: natural.TfIdfTerm, keywordScores: {
-    numDocuments: number; term: string; score: number; 
+    numDocuments: number; term: string; score: number;
 }[], stopwords: string[]) {
     const existingKeyword = keywordScores.find((kw) => { return kw.term === item.term; });
 

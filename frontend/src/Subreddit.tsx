@@ -13,7 +13,7 @@ export const Subreddit: FC = () => {
 
     return (
         <div className="Subreddit">
-            <h1 className="title w-50 m-auto text-center py-4">r/{ sub } Statistics</h1>
+            <h1 className="title w-50 m-auto text-center py-4"><a href={`http://reddit.com/r/${sub}`}>r/{ sub }</a> Statistics</h1>
             <div className="SubInfo Widget">
                 <SubInfo sub={sub} />
             </div>

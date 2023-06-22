@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 interface IAddSubreddit { };
 
 export const AddSubreddit: FC<IAddSubreddit> = (props) => {
@@ -11,7 +11,7 @@ export const AddSubreddit: FC<IAddSubreddit> = (props) => {
     function handleSubmit(e: any) {
         e.preventDefault();
         setIsLoading(true);
-        setNumJobs(numJobs + 1)
+        setNumJobs(prevNumJobs => prevNumJobs + 1);
 
         fetch(`http://localhost:8080/fetch/${subredditValue}`,
             { method: 'POST' })
@@ -30,10 +30,14 @@ export const AddSubreddit: FC<IAddSubreddit> = (props) => {
                 if (err.name !== 'AbortError')
                     setError(err);
             }).finally(() => {
-                setNumJobs(numJobs - 1);
-                setIsLoading(!(numJobs > 0));
+                setNumJobs(prevNumJobs => prevNumJobs - 1);
             });
     }
+
+    useEffect(() => {
+        setIsLoading(numJobs > 0); // Update isLoading based on numJobs
+    }, [numJobs]);
+
 
     return (
         <div className="AddPost w-50 p-5 my-5 text-center mx-auto">

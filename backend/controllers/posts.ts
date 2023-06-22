@@ -9,6 +9,7 @@ import { upsertHeatmap } from '../db/heatmapsQueries';
 import { upsertKeywords } from '../db/keywordsQueries';
 import { generateHeatmapData } from '../services/heatmapDataGenerator';
 import { generateKeywords } from '../services/keywordGenerator';
+import { addJobToQueue } from '../bullmq/queue';
 
 export async function getFirstPost(req: Request, res: Response) {
     const sub = req.params.sub;
@@ -69,13 +70,7 @@ async function postIndividualPost(id: string) {
 }
 
 async function updateTables(sub: string) {
-    const calendarData = await generateHeatmapData(sub);
-    const keywordData = await generateKeywords(sub);
-
-    await updateJobStatus(sub, 'pending');
-    await upsertHeatmap(sub, calendarData);
-    await upsertKeywords(sub, keywordData);
-    await updateJobStatus(sub, 'available');
+    await addJobToQueue({ type: 'DownloadJob', sub: String(sub) });
 }
 
 async function checkPostIsNewerThanDb(post: any) {

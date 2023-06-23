@@ -4,11 +4,6 @@ import { fetchSubmission } from '../snoowrap/getData';
 import { getIndividualSub } from '../db/subQueries';
 import { startTask } from './mainTask';
 import { countPosts, getAvgUpvoteRatio, getLatestPost, insertOnePost, searchPosts } from '../db/postQueries';
-import { updateJobStatus } from '../db/jobQueries';
-import { upsertHeatmap } from '../db/heatmapsQueries';
-import { upsertKeywords } from '../db/keywordsQueries';
-import { generateHeatmapData } from '../services/heatmapDataGenerator';
-import { generateKeywords } from '../services/keywordGenerator';
 import { addJobToQueue } from '../bullmq/queue';
 
 export async function getFirstPost(req: Request, res: Response) {
